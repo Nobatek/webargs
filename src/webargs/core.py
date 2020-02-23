@@ -35,8 +35,7 @@ def _callable_or_raise(obj):
     """
     if obj and not callable(obj):
         raise ValueError("{!r} is not callable.".format(obj))
-    else:
-        return obj
+    return obj
 
 
 def is_multiple(field):
@@ -351,12 +350,11 @@ class Parser:
                     error_headers=error_headers,
                 )
                 if as_kwargs:
-                    kwargs.update(parsed_args)
-                    return func(*args, **kwargs)
+                    kwargs.update(parsed_args or {})
                 else:
                     # Add parsed_args after other positional arguments
-                    new_args = args + (parsed_args,)
-                    return func(*new_args, **kwargs)
+                    args += (parsed_args,)
+                return func(*args, **kwargs)
 
             wrapper.__wrapped__ = func
             return wrapper

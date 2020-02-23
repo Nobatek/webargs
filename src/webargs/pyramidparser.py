@@ -160,10 +160,11 @@ class PyramidParser(core.Parser):
                     error_headers=error_headers,
                 )
                 if as_kwargs:
-                    kwargs.update(parsed_args)
-                    return func(obj, *args, **kwargs)
+                    kwargs.update(parsed_args or {})
                 else:
-                    return func(obj, parsed_args, *args, **kwargs)
+                    # Add parsed_args after other positional arguments
+                    args += (parsed_args,)
+                return func(obj, *args, **kwargs)
 
             wrapper.__wrapped__ = func
             return wrapper

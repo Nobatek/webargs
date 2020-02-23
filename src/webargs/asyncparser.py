@@ -149,11 +149,10 @@ class AsyncParser(core.Parser):
                     )
                     if as_kwargs:
                         kwargs.update(parsed_args or {})
-                        return await func(*args, **kwargs)
                     else:
                         # Add parsed_args after other positional arguments
-                        new_args = args + (parsed_args,)
-                        return await func(*new_args, **kwargs)
+                        args += (parsed_args,)
+                    return await func(*args, **kwargs)
 
             else:
 
@@ -173,12 +172,11 @@ class AsyncParser(core.Parser):
                         error_headers=error_headers,
                     )
                     if as_kwargs:
-                        kwargs.update(parsed_args)
-                        return func(*args, **kwargs)  # noqa: B901
+                        kwargs.update(parsed_args or {})
                     else:
                         # Add parsed_args after other positional arguments
-                        new_args = args + (parsed_args,)
-                        return func(*new_args, **kwargs)
+                        args += (parsed_args,)
+                    return func(*args, **kwargs)
 
             return wrapper
 
